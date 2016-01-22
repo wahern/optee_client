@@ -422,16 +422,16 @@ int main(int argc, char *argv[])
 	struct tee_rpc_invoke request;
 	int ret;
 
-	sprintf(devpath, "/dev/opteearmtz00");
-	sprintf(devname1, "optee_armtz");
-	sprintf(devname2, "teetz");
+	strlcpy(devpath, "/dev/opteearmtz00", sizeof(devpath));
+	strlcpy(devname1, "optee_armtz", sizeof(devname1));
+	strlcpy(devname2, "teetz", sizeof(devname2));
 
 	while (--argc) {
 		n++;
 		if (strncmp(argv[n], "opteearmtz00", 12) == 0) {
-			snprintf(devpath, TEEC_MAX_DEVNAME_SIZE, "%s", "/dev/opteearmtz00");
-			snprintf(devname1, TEEC_MAX_DEVNAME_SIZE, "%s", "optee_armtz");
-			snprintf(devname2, TEEC_MAX_DEVNAME_SIZE, "%s", "teetz");
+			strlcpy(devpath, "/dev/opteearmtz00", sizeof(devpath));
+			strlcpy(devname1, "optee_armtz", sizeof(devname1));
+			strlcpy(devname2, "teetz", sizeof(devname2));
 		} else {
 			EMSG("Invalid argument #%d", n);
 			exit(EXIT_FAILURE);

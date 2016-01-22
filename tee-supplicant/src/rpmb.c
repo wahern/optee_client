@@ -132,9 +132,14 @@ static int mmc_rpmb_fd(uint16_t dev_id)
 	static int id;
 	static int fd = -1;
 	char path[21];
+	int n;
 
 	if (fd < 0) {
-		snprintf(path, sizeof(path), "/dev/mmcblk%urpmb", dev_id);
+		n = snprintf(path, sizeof(path), "/dev/mmcblk%hurpmb", dev_id);
+		if (n < 0) {
+		        EMSG("Could not format device path (%s)", strerror(errno));
+		        return -1;
+		}
 		fd = open(path, O_RDWR);
 		if (fd < 0) {
 			EMSG("Could not open %s (%s)", path, strerror(errno));
@@ -195,8 +200,11 @@ static struct rpmb_emu *mem_for_fd(int fd)
 static void dump_data(size_t blknum, uint8_t *ptr)
 {
 	char msg[100];
+	int n;
 
-	snprintf(msg, sizeof(msg), "MMC block %zu", blknum);
+	n = snprintf(msg, sizeof(msg), "MMC block %zu", blknum);
+	if (n < 0)
+	        strlcpy(msg, "MMC block ?", sizeof(msg));
 	dump_buffer(msg, ptr, 256);
 }
 #else
