@@ -28,11 +28,25 @@
 #define TEEC_H
 
 #include <stdint.h>
+#include <string.h>
 #include "tee_client_api.h"
 #include <linux/tee_ioc.h>
 
 #ifndef strlcpy
-#define strlcpy(dst, src, size) snprintf((dst), (size), "%s", (src))
+#define strlcpy(dst, src, size) teec_strlcpy((dst), (src), (size))
+static inline size_t teec_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t n;
+
+	if (size > 0) {
+		n = strnlen(src, size - 1);
+		(void)memcpy(dst, src, n);
+		dst[n] = '\0';
+		return n + strlen(&src[n]);
+	} else {
+		return strlen(src);
+	}
+}
 #endif
 
 #endif

@@ -116,7 +116,7 @@ TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *context)
 	name_size = snprintf(context->devname, TEEC_MAX_DEVNAME_SIZE,
 			     "/dev/%s", _name);
 
-	if (name_size >= TEEC_MAX_DEVNAME_SIZE)
+	if (name_size < 0 || name_size >= TEEC_MAX_DEVNAME_SIZE)
 		return TEEC_ERROR_BAD_PARAMETERS; /* Device name truncated */
 
 	context->fd = open(context->devname, O_RDWR);
